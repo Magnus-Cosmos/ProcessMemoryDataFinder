@@ -82,15 +82,14 @@ namespace OsuMemoryDataProvider
                 UseMask = true,
             };
 
-            Signatures[(int)SignatureNames.IsReplay] = new SigEx
+            Signatures.Add((int)SignatureNames.PlayerContainer, new SigEx
             {
-                Name = "IsReplay",
-                Pattern = PatternHelpers.UnpackStr("741A80000000000000741180"),
-                Mask = "xxx??????xxx",
-                Offset = 13,
-                PointerOffsets = { 0 },
-                UseMask = true,
-            };
+                Name = "PlayerContainer",
+                Pattern = PatternHelpers.UnpackStr("894608EB2A8B35"),
+                Offset = 7,
+                PointerOffsets = { 0x4 },
+                UseMask = false
+            });
 
             CreateSkinSignatures();
             CreatePlaySignatures();
@@ -232,12 +231,17 @@ namespace OsuMemoryDataProvider
                 //avaliable only when playing;
                 //need to reset on each play
                 Name = "PlayContainer",
-                Pattern = PatternHelpers.UnpackStr("894608EB2A8B35"),
-                Offset = 7,
-                PointerOffsets = { 0x4, 0xC4, 0x4 },
-                UseMask = false
+                ParentSig = Signatures[(int)SignatureNames.PlayerContainer],
+                PointerOffsets = { 0xC4, 0x4 },
             });
 
+            Signatures[(int)SignatureNames.IsReplay] = new SigEx
+            {
+                //bool
+                Name = "IsReplay",
+                ParentSig = Signatures[(int)SignatureNames.PlayerContainer],
+                PointerOffsets = { 0x17A },
+            };
             Signatures.Add((int)SignatureNames.PlayingMods, new SigEx
             {
                 //Complex - 2 xored ints

@@ -40,6 +40,7 @@ namespace OsuMemoryDataProvider
         PlayTime,
         Retrys,
         IsReplay,
+        PlayerContainer,
 
         PlayerName,
         HitErrors,
